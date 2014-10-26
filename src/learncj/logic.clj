@@ -18,7 +18,7 @@
 (defn draw-n-queen [queens]
   (for [x queens]
     (str (apply str (repeat x "[ ]")) "[*]" (apply str (repeat (dec (- (count queens) x)) "[ ]")) "\n")))
-(println (draw-n-queen [1 3 6 2 7 4 0 5]))
+
 (println (draw-n-queen '(2 4 1 7 0 6 3 5) ))
 (defn n-queens [n]
   (let [vars (zipmap (range n) (repeatedly n lvar))
