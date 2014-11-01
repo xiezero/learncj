@@ -20,6 +20,8 @@
     (str (apply str (repeat x "[ ]")) "[*]" (apply str (repeat (dec (- (count queens) x)) "[ ]")) "\n")))
 
 (println (draw-n-queen '(2 4 1 7 0 6 3 5) ))
+
+;;solve n-queens problem with clojure.logic
 (defn n-queens [n]
   (let [vars (zipmap (range n) (repeatedly n lvar))
         sum (repeatedly n lvar)
@@ -27,16 +29,21 @@
         ]
     (run* [qs]
           (== qs vars)
-          ;range
+          ;y in (range 0 n)
           (everyg #(fd/in % (apply fd/domain (range n))) (vals vars))
-          (everyg #(fd/in % (apply fd/domain (range (* n 2)))) sum)
-          (everyg #(fd/in % (apply fd/domain (range (- n) n))) mi)
+
           ;not in same cols
           (fd/distinct (vals vars))
-          ;not in same diagonal
+
+          ;not in same diagonal,
+          ;if (+ x y) is different, the queens is not in same diagonal
+          (everyg #(fd/in % (apply fd/domain (range (* n 2)))) sum)
           (everyg (fn [[i x]] (fd/+ i x (nth sum i))) vars)
-          (everyg (fn [[i x]] (fd/- i x (nth mi i))) vars)
           (fd/distinct sum)
+
+          ;;if (- x y) is different, the queens is not in same back-diagonal
+          (everyg #(fd/in % (apply fd/domain (range (- n) n))) mi)
+          (everyg (fn [[i x]] (fd/- i x (nth mi i))) vars)
           (fd/distinct mi)
           )))
 
